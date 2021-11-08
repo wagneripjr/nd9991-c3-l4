@@ -10,7 +10,7 @@ jobs:
   deploy-cloudformation:
     executor: aws-cli/default
     steps:
-      - run: aws cloudformation create-stack --stack-name nd9991-c3-l4 --template-body file://template.yml  --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"
+      - run: /usr/local/bin/aws cloudformation create-stack --stack-name nd9991-c3-l4 --template-body file://template.yml  --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"
 workflows:
   aws-cli:
     jobs:
