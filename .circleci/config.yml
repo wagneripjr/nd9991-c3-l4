@@ -2,19 +2,13 @@ version: 2.1
 orbs:
   aws-cli: circleci/aws-cli@2.0
 jobs:
-  aws-cli-install:
+  deploy-cloudformation:
     executor: aws-cli/default
     steps:
     - aws-cli/install:
         disable-aws-pager: false
-  deploy-cloudformation:
-    executor: aws-cli/default
-    steps:
-      - run: aws cloudformation create-stack --stack-name nd9991-c3-l4 --template-body file://template.yml  --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"
+    - run: aws cloudformation create-stack --stack-name nd9991-c3-l4 --template-body file://template.yml  --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"
 workflows:
-  aws-cli:
+  deploy-cloudformation:
     jobs:
-      - aws-cli-install
-      - deploy-cloudformation:
-          requires:
-            - aws-cli-install
+      - deploy-cloudformation
