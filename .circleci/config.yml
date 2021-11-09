@@ -8,7 +8,9 @@ jobs:
     - aws-cli/install:
         disable-aws-pager: false
     - checkout
-    - run: aws cloudformation create-stack --stack-name nd9991-c3-l4 --template-body file://template.yml  --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"
+    - run: |
+        aws cloudformation update-stack --stack-name nd9991-c3-l4 --template-body file://template.yml  --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" \
+        && aws cloudformation create-stack --stack-name nd9991-c3-l4 --template-body file://template.yml  --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"
 workflows:
   deploy-cloudformation:
     jobs:
