@@ -6,7 +6,7 @@ Resources:
     Properties:
       SecurityGroups:
         - !Ref InstanceSecurityGroup
-      KeyName: AWS_Keypair_ND9991
+      KeyName: udacity
       ImageId: 'ami-083654bd07b5da81d'
       InstanceType: t3.micro
 
