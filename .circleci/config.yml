@@ -54,9 +54,9 @@ jobs:
           # Test if website exists
           if curl -s --head -m 30 ${URL}
           then
-            return 0
+            exit 0
           else
-            return 1
+            exit 1
           fi
     - destroy_environment
 workflows:
