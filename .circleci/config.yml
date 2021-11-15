@@ -3,6 +3,7 @@ orbs:
   aws-cli: circleci/aws-cli@2.0
 commands:
    destroy_environment:
+     executor: aws-cli/default
      steps:
        - run:
            name: Destroy environment
@@ -49,7 +50,7 @@ jobs:
         command: |
           URL=http://$(cat workspace/inventory):3001
           # Test if website exists
-          if curl -s --head ${URL}
+          if curl -s --head -m 30 ${URL}
           then
             return 0
           else
