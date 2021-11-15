@@ -4,8 +4,6 @@ orbs:
 jobs:
   create_infrastructure:
     executor: aws-cli/default
-    parameters:
-      stackname: "udacity-exercise"
     steps:
     - aws-cli/install:
         disable-aws-pager: false
@@ -16,7 +14,7 @@ jobs:
         [[ ! -z "$stacks" ]] && aws cloudformation update-stack --stack-name nd9991-c3-l4 --template-body file://template.yml  --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"  \
         || aws cloudformation create-stack --stack-name nd9991-c3-l4 --template-body file://template.yml  --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" 
         
-        aws cloudformation wait $(echo $([[ ! -z "$stacks" ]] && echo stack-pdate--complete || echo stack-create-complete )) --stack-name <<parameters.stackname>>
+        aws cloudformation wait $(echo $([[ ! -z "$stacks" ]] && echo stack-pdate--complete || echo stack-create-complete )) --stack-name nd9991-c3-l4
 
         aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=udacity" --output text >> workspace/inventory
     - persist_to_workspace:
