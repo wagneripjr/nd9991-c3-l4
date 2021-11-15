@@ -47,7 +47,7 @@ jobs:
     - run:
         name: smoke test
         command: |
-          URL=http://$(cat workspace/inventory):3000
+          URL=http://$(cat workspace/inventory):3001
           # Test if website exists
           if curl -s --head ${URL}
           then
