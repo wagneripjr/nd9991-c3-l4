@@ -1,6 +1,15 @@
 version: 2.1
 orbs:
   aws-cli: circleci/aws-cli@2.0
+commands:
+   destroy_environment:
+     steps:
+       - run:
+           name: Destroy environment
+           when: on_fail
+           command: |
+             aws cloudformation delete-stack --stack-name nd9991-c3-l4
+
 jobs:
   create_infrastructure:
     executor: aws-cli/default
@@ -46,6 +55,7 @@ jobs:
           else
             return 1
           fi
+    - destroy_environment
 workflows:
   deploy:
     jobs:
