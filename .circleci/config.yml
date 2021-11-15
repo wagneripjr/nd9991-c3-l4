@@ -10,14 +10,9 @@ jobs:
     - checkout
     - run: |
         mkdir workspace
-        
-        stacks=$(aws cloudformation describe-stacks --out text)
-
         aws cloudformation deploy --no-fail-on-empty-changeset --stack-name nd9991-c3-l4 --template-file template.yml  --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"
-        
-        aws cloudformation wait $(echo $([[ ! -z "$stacks" ]] && echo stack-update-complete || echo stack-create-complete )) --stack-name nd9991-c3-l4
-
-        aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=udacity" --output text >> workspace/inventory
+        aws ec2 wait instance-status-ok
+        aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=udacity" --output text > workspace/inventory
     - persist_to_workspace:
         root: workspace
         paths:
@@ -37,4 +32,6 @@ workflows:
   deploy:
     jobs:
       - create_infrastructure
-      - configure_infrastructure
+      - configure_infrastructure:
+          requires:
+            - create_infrastructure
