@@ -1,5 +1,6 @@
+# Exercise - Rollback
+AWSTemplateFormatVersion: 2010-09-09
 Description: ND9991 C3 L4 
-
 Resources:
   EC2Instance:
     Type: 'AWS::EC2::Instance'
@@ -9,7 +10,9 @@ Resources:
       KeyName: udacity
       ImageId: 'ami-083654bd07b5da81d'
       InstanceType: t3.micro
-
+      Tags:
+        - key: project
+          value: udacity      
   InstanceSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:

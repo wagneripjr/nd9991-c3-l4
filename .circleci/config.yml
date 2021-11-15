@@ -2,17 +2,40 @@ version: 2.1
 orbs:
   aws-cli: circleci/aws-cli@2.0
 jobs:
-  deploy-cloudformation:
+  create_infrastructure:
     executor: aws-cli/default
+    parameters:
+      stackname: "udacity-exercise"
     steps:
     - aws-cli/install:
         disable-aws-pager: false
     - checkout
     - run: |
         stacks=$(aws cloudformation describe-stacks --out text)
+
         [[ ! -z "$stacks" ]] && aws cloudformation update-stack --stack-name nd9991-c3-l4 --template-body file://template.yml  --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"  \
         || aws cloudformation create-stack --stack-name nd9991-c3-l4 --template-body file://template.yml  --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" 
+        
+        aws cloudformation wait $(echo $([[ ! -z "$stacks" ]] && echo stack-pdate--complete || echo stack-create-complete )) --stack-name <<parameters.stackname>>
+
+        aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=udacity" --output text >> workspace/inventory
+    - persist_to_workspace:
+        root: workspace
+        paths:
+          - inventory
+  configure_infrastructure:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+    - checkout
+    - add_ssh_keys:
+        fingerprints: ["dd:68:51:83:a4:47:35:d3:8c:65:55:66:bb:db:70:bb"]  
+    - attach_workspace:
+        at: workspace
+    - run: apk add --update ansible
+    - run: ansible-playbook -i workspace/inventory ansible-setup-web.yml
 workflows:
-  deploy-cloudformation:
+  deploy:
     jobs:
-      - deploy-cloudformation
+      - create_infrastructure
+      - configure_infrastructure
