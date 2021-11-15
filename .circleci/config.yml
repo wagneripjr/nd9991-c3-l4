@@ -13,8 +13,7 @@ jobs:
         
         stacks=$(aws cloudformation describe-stacks --out text)
 
-        [[ ! -z "$stacks" ]] && aws cloudformation update-stack --no-fail-on-empty-changeset --stack-name nd9991-c3-l4 --template-body file://template.yml  --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"  \
-        || aws cloudformation create-stack --stack-name nd9991-c3-l4 --template-body file://template.yml  --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" 
+        aws cloudformation deploy --no-fail-on-empty-changeset --stack-name nd9991-c3-l4 --template-file template.yml  --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"
         
         aws cloudformation wait $(echo $([[ ! -z "$stacks" ]] && echo stack-pdate--complete || echo stack-create-complete )) --stack-name nd9991-c3-l4
 
