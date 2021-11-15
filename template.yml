@@ -11,8 +11,8 @@ Resources:
       ImageId: 'ami-083654bd07b5da81d'
       InstanceType: t3.micro
       Tags:
-        - key: project
-          value: udacity      
+        - Key: project
+          Value: udacity
   InstanceSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
