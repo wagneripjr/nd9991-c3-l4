@@ -45,7 +45,8 @@ jobs:
         at: workspace
     - aws-cli/install:
         disable-aws-pager: false        
-    - run: apt install curl
+    - run:
+        command: sudo apt install curl
     - run:
         name: smoke test
         command: |
