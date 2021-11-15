@@ -9,6 +9,8 @@ jobs:
         disable-aws-pager: false
     - checkout
     - run: |
+        mkdir workspace
+        
         stacks=$(aws cloudformation describe-stacks --out text)
 
         [[ ! -z "$stacks" ]] && aws cloudformation update-stack --stack-name nd9991-c3-l4 --template-body file://template.yml  --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"  \
