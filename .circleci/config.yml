@@ -3,7 +3,6 @@ orbs:
   aws-cli: circleci/aws-cli@2.0
 commands:
    destroy_environment:
-     executor: aws-cli/default
      steps:
        - run:
            name: Destroy environment
@@ -40,11 +39,13 @@ jobs:
     - run: ansible-playbook -i workspace/inventory ansible-setup-web.yml
   smoke_test:
     docker:
-      - image: alpine:latest
+      - image: cimg/python:3.7
     steps:
     - attach_workspace:
         at: workspace
-    - run: apk add --update curl
+    - aws-cli/install:
+        disable-aws-pager: false        
+    - run: apt install curl
     - run:
         name: smoke test
         command: |
